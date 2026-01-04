@@ -443,6 +443,21 @@
         }
         
         /*author: Feroan101*/
+        .product-text {
+            color: #a8a8a8; 
+            max-width: fit-content; 
+            font-size: 12px;
+            font-weight: 400;
+        }
+
+        .product-text a{
+            color: white;
+            font-weight: 600;
+            background-color: #0b0d1a;
+            text-decoration: none;
+            padding: 1px 6px;
+            border-radius: 4px;
+        }
         .modal-content {
             background-color: white;
             padding: 30px;
@@ -509,7 +524,7 @@
 
         .submit-button {
             padding: 10px 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #64C4BC 0%, #4DB6AC 100%);;
             color: white;
             border: none;
             border-radius: 6px;
@@ -547,7 +562,7 @@
             justify-content: center;
             gap: 10px;
             padding: 12px 16px;
-            border: 2px solid #2563EB;
+            border: 2px solid #4DB6AC;
             border-radius: 8px;
             background: white;
             cursor: pointer;
@@ -786,8 +801,7 @@
 
             <!-- PRODUCT LINE - HORIZONTAL -->
             <div class="product-line">
-                <p class="product-text">A Product of</p>
-                <img src="/home/megas/front/assets/generated-image_3_-removebg-preview.png" alt="Enmero Technologies" class="product-image">
+                <p class="product-text">A Product of <a href="https://www.enmero.in">enmero</a></p>
             </div>
         </div>
     </div>
@@ -940,8 +954,8 @@
                     <input type="text" class="form-input" name="builder_tech_stack" placeholder="e.g., React, Node.js, Python, Docker" required>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">GitHub/Portfolio *</label>
-                    <input type="url" class="form-input" name="builder_portfolio" placeholder="https://github.com/yourprofile" required>
+                    <label class="form-label">GitHub/Portfolio</label>
+                    <input type="url" class="form-input" name="builder_portfolio" placeholder="https://github.com/yourprofile">
                 </div>
                 <div class="form-group">
                     <label class="form-label">Work Preference *</label>
