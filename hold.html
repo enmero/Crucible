@@ -1,0 +1,1361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crucible - Validation Platform</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            height: 100%;
+            width: 100%;
+            overflow-x: hidden;
+            background: #ffffff;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: #1f2937;
+        }
+
+        .container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: clamp(24px, 5vw, 48px);
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* LOGO SECTION */
+        .logo-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: clamp(16px, 3vw, 32px);
+            margin-bottom: clamp(40px, 6vw, 80px);
+            animation: fadeInDown 0.6s ease-out;
+        }
+
+        .logo-container {
+            width: clamp(72px, 14vw, 110px);
+            height: clamp(72px, 14vw, 110px);
+            animation: logoFloat 3.5s ease-in-out infinite;
+            filter: drop-shadow(0 16px 48px rgba(100, 196, 188, 0.25));
+        }
+
+        .logo-icon {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .layer {
+            transform-origin: center bottom;
+            animation: layerRise 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        .bg-teal { animation-delay: 0.1s; opacity: 0; animation: fadeIn 0.5s forwards; }
+        .hill-1 { transform: translateY(100px); animation-delay: 0.3s; }
+        .hill-2 { transform: translateY(100px); animation-delay: 0.5s; }
+        .hill-3 { transform: translateY(100px); animation-delay: 0.7s; }
+
+        .logo-text {
+            font-size: clamp(48px, 10vw, 72px);
+            font-weight: 700;
+            color: rgb(85, 85, 85);
+            letter-spacing: -0.03em;
+            margin: 0;
+            opacity: 0;
+            animation: fadeInDown 0.8s ease-out 0.6s forwards;
+        }
+
+        /* STATUS TEXT */
+        .status-wrapper {
+            text-align: center;
+            margin-bottom: clamp(40px, 6vw, 80px);
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out 0.3s forwards;
+        }
+
+        .status-title {
+            font-size: clamp(14px, 2.2vw, 16px);
+            font-weight: 600;
+            color: #6b7280;
+            margin-bottom: 12px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .status-text {
+            font-size: clamp(26px, 4.5vw, 40px);
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        /* PROGRESS SECTION */
+        .progress-wrapper {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto clamp(40px, 6vw, 80px);
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out 0.5s forwards;
+        }
+
+        .progress-bar-container {
+            position: relative;
+            height: 3px;
+            background: #e5e7eb;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: clamp(24px, 4vw, 40px);
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #64C4BC 0%, #FF6B3D 50%, #FF8A24 100%);
+            width: 0;
+            border-radius: 2px;
+            animation: progressFill 3s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
+            box-shadow: 0 0 16px rgba(100, 196, 188, 0.4);
+        }
+
+        .status-dots {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #d1d5db;
+            transition: all 0.3s ease;
+        }
+
+        .dot.active {
+            background: #64C4BC;
+            box-shadow: 0 0 12px rgba(100, 196, 188, 0.6);
+            transform: scale(1.4);
+        }
+
+        /* REGISTER SECTION */
+        .register-wrapper {
+            text-align: center;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out 0.7s forwards;
+        }
+
+        .register-subtitle {
+            font-size: clamp(14px, 2vw, 16px);
+            color: #6b7280;
+            margin-bottom: clamp(20px, 3vw, 32px);
+            font-weight: 400;
+            letter-spacing: 0.02em;
+        }
+
+        .register-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: clamp(12px, 2.5vw, 16px) clamp(28px, 5vw, 44px);
+            background: linear-gradient(135deg, #64C4BC 0%, #4DB6AC 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            font-size: clamp(14px, 2vw, 16px);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            box-shadow: 0 8px 32px rgba(100, 196, 188, 0.3);
+            text-decoration: none;
+        }
+
+        .register-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 16px 48px rgba(100, 196, 188, 0.5);
+        }
+
+        .register-button:active {
+            transform: translateY(-1px);
+        }
+
+        /* PRODUCT LINE - HORIZONTAL */
+        .product-line {
+            margin-top: clamp(20px, 3vw, 32px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: clamp(6px, 1.5vw, 10px);
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out 0.9s forwards;
+        }
+
+        .product-text {
+            font-size: clamp(10px, 1.5vw, 12px);
+            color: #d1d5db;
+            font-weight: 400;
+            letter-spacing: 0.03em;
+            white-space: nowrap;
+        }
+
+        .product-image {
+            height: clamp(12px, 1.8vw, 16px);
+            display: inline-block;
+            opacity: 0.6;
+            transition: opacity 0.3s ease;
+        }
+
+        .product-image:hover {
+            opacity: 0.9;
+        }
+
+        /* MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            padding: clamp(32px, 6vw, 56px);
+            max-width: 420px;
+            width: 100%;
+            box-shadow: 0 32px 96px rgba(0, 0, 0, 0.15);
+            position: relative;
+            animation: modalSlideUp 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 28px;
+            color: #9ca3af;
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .modal-close:hover {
+            color: #64C4BC;
+            transform: rotate(90deg);
+        }
+
+        .modal-title {
+            font-size: clamp(22px, 4vw, 28px);
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .modal-subtitle {
+            font-size: clamp(14px, 2vw, 16px);
+            color: #6b7280;
+            margin-bottom: clamp(28px, 5vw, 40px);
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: clamp(12px, 2vw, 16px) 16px;
+            border: 1px solid #e5e7eb;
+            background: #ffffff;
+            border-radius: 8px;
+            font-size: clamp(14px, 2vw, 16px);
+            color: #1f2937;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .form-input::placeholder {
+            color: #9ca3af;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #64C4BC;
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(100, 196, 188, 0.15);
+        }
+
+        .error-message {
+            display: none;
+            font-size: 13px;
+            color: #ef4444;
+            margin-top: 6px;
+            text-align: left;
+        }
+
+        .submit-button {
+            width: 100%;
+            padding: clamp(14px, 2.5vw, 18px);
+            background: linear-gradient(135deg, #64C4BC 0%, #4DB6AC 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: clamp(14px, 2vw, 16px);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 8px;
+        }
+
+        .submit-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(100, 196, 188, 0.4);
+        }
+
+        .submit-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .success-message {
+            display: none;
+            padding: 16px;
+            background: #f0fdf4;
+            border: 1px solid #86efac;
+            border-radius: 8px;
+            color: #166534;
+            font-size: 14px;
+            text-align: center;
+            margin-top: 16px;
+            font-weight: 500;
+        }
+
+        /* ANIMATIONS */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes layerRise {
+            from { transform: translateY(100px); }
+            to { transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        @keyframes progressFill {
+            0% { width: 0; }
+            25% { width: 30%; }
+            50% { width: 70%; }
+            75% { width: 90%; }
+            100% { width: 100%; }
+        }
+
+        @keyframes modalSlideUp {
+            from { opacity: 0; transform: translateY(40px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .container {
+                padding: 32px clamp(20px, 4vw, 32px);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo-wrapper {
+                margin-bottom: 32px;
+            }
+            
+            .status-wrapper {
+                margin-bottom: 32px;
+            }
+
+            .progress-wrapper {
+                margin-bottom: 32px;
+            }
+
+            .product-line {
+                flex-wrap: wrap;
+            }
+        }
+        
+        /*author: Feroan101*/
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 16px;
+            max-width: 450px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.3s ease;
+            position: relative;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 6px;
+        }
+
+        .modal-subtitle {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 16px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+            margin-bottom: 12px;
+        }
+
+        .form-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .form-input {
+            padding: 8px 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 13px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .register-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .form-checkbox {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            margin: 12px 0;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .submit-button {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 6px;
+        }
+
+        .back-button {
+            width: 100%;
+            margin-top: 10px;
+            padding: 10px;
+            background: #f5f5f5;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            color: #666;
+            transition: all 0.3s ease;
+        }
+
+        .role-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .role-btn {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 16px;
+            border: 2px solid #2563EB;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 13px;
+            font-weight: 500;
+            color: #111827;
+        }
+
+        .role-btn:hover {
+            transform: translateY(-1px) scale(1.02);
+            box-shadow: 0 6px 12px rgba(37, 99, 235, 0.18);
+            background: #EFF6FF;
+        }
+
+        .role-btn i {
+            font-size: 16px;
+            font-weight: 900;
+        }
+
+        .error-message {
+            display: none;
+            padding: 8px;
+            background: #FEE;
+            color: #C33;
+            border-radius: 4px;
+            font-size: 12px;
+            margin: -4px 0 8px 0;
+        }
+
+        .success-message {
+            padding: 8px;
+            background: #EFE;
+            color: #3C3;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+            
+
+        /* FORMS */
+        .register-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+
+        .form-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 6px;
+        }
+
+        .form-input {
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #2563EB;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        select.form-input {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M1 4l5 4 5-4'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            padding-right: 30px;
+        }
+
+        /* CHECKBOX */
+        .form-checkbox {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin: 20px 0;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .form-checkbox input[type="checkbox"] {
+            margin-top: 3px;
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+            accent-color: #2563EB;
+            flex-shrink: 0;
+        }
+
+        .form-checkbox a {
+            color: #2563EB;
+            text-decoration: underline;
+        }
+
+        .form-checkbox a:hover {
+            text-decoration: none;
+        }
+
+        /* SUBMIT BUTTON */
+        .submit-button {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .submit-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
+        }
+
+        .submit-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* BACK BUTTON */
+        .back-button {
+            width: 100%;
+            margin-top: 16px;
+            padding: 12px;
+            background: #f5f5f5;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #666;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: #e0e0e0;
+        }
+
+        /* MESSAGES */
+        .error-message {
+            display: none;
+            padding: 12px;
+            background: #FEE;
+            color: #C33;
+            border-radius: 6px;
+            font-size: 13px;
+            margin: -8px 0 16px 0;
+        }
+
+        .success-message {
+            padding: 12px;
+            background: #EFE;
+            color: #3C3;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+
+        .success-message.hidden {
+            display: none;
+        }
+
+        .modal-view {
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-view.hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- LOGO -->
+        <div class="logo-wrapper">
+            <div class="logo-container">
+                <svg class="logo-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <clipPath id="triangleClip">
+                            <path d="M 5,15 Q 2,15 3.5,18 L 46.5,92 Q 50,98 53.5,92 L 96.5,18 Q 98,15 95,15 Z"/>
+                        </clipPath>
+                    </defs>
+                    <g clip-path="url(#triangleClip)">
+                        <rect class="layer bg-teal" x="0" y="0" width="100" height="100" fill="#64C4BC"/>
+                        <circle class="layer hill-1" cx="30" cy="65" r="45" fill="#F24438"/>
+                        <circle class="layer hill-2" cx="70" cy="75" r="45" fill="#FF6B3D"/>
+                        <circle class="layer hill-3" cx="50" cy="105" r="50" fill="#FF8A24"/>
+                    </g>
+                </svg>
+            </div>
+            <h1 class="logo-text">Crucible</h1>
+        </div>
+
+        <!-- STATUS -->
+        <div class="status-wrapper">
+            <p class="status-title">Validation Platform</p>
+            <p class="status-text">In Development</p>
+        </div>
+
+        <!-- PROGRESS -->
+        <div class="progress-wrapper">
+            <div class="progress-bar-container">
+                <div class="progress-bar"></div>
+            </div>
+            <div class="status-dots">
+                <div class="dot active"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+        </div>
+
+        <!-- REGISTER -->
+        <div class="register-wrapper">
+            <p class="register-subtitle">Join the waitlist for exclusive early access</p>
+            <button class="register-button" onclick="openModal()">
+                Get Early Access
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
+                </svg>
+            </button>
+
+            <!-- PRODUCT LINE - HORIZONTAL -->
+            <div class="product-line">
+                <p class="product-text">A Product of</p>
+                <img src="/home/megas/front/assets/generated-image_3_-removebg-preview.png" alt="Enmero Technologies" class="product-image">
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL -->
+    <!-- MODAL -->
+<div class="modal" id="modal">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+        
+        <!-- ROLE SELECTION VIEW -->
+        <div class="modal-view" id="roleView">
+            <h2 class="modal-title">Join Crucible</h2>
+            <p class="modal-subtitle">Select your role to get started</p>
+            
+            <div class="role-buttons">
+                <button class="role-btn" onclick="selectRole('founder')">
+                    <i class="fas fa-users"></i>
+                    <span class="role-label">Founder</span>
+                </button>
+                <button class="role-btn" onclick="selectRole('builder')">
+                    <i class="fas fa-hammer"></i>
+                    <span class="role-label">Builder</span>
+                </button>
+                <button class="role-btn" onclick="selectRole('investor')">
+                    <i class="fas fa-dollar-sign"></i>
+                    <span class="role-label">Investor</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- FOUNDER FORM -->
+        <div class="modal-view hidden" id="founderView">
+            <h2 class="modal-title">Founder Registration</h2>
+            <p class="modal-subtitle">Tell us about your venture</p>
+            
+            <form id="founderForm" class="register-form">
+                <div class="form-group">
+                    <label class="form-label">Full Name *</label>
+                    <input type="text" class="form-input" name="founder_name" placeholder="Your name" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email Address *</label>
+                    <input type="email" class="form-input" name="founder_email" placeholder="name@company.com" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Phone Number *</label>
+                    <input type="tel" class="form-input" name="founder_phone" placeholder="+91 XXXXX XXXXX" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Company Name *</label>
+                    <input type="text" class="form-input" name="founder_company" placeholder="Your company" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Company Stage *</label>
+                    <select class="form-input" name="founder_stage" required>
+                        <option value="">Select stage...</option>
+                        <option value="idea">Idea</option>
+                        <option value="mvp">MVP</option>
+                        <option value="growth">Growth</option>
+                        <option value="scale">Scale</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Industry/Sector *</label>
+                    <select class="form-input" name="founder_industry" required>
+                        <option value="">Select industry...</option>
+                        <option value="saas">SaaS</option>
+                        <option value="fintech">FinTech</option>
+                        <option value="ai-ml">AI/ML</option>
+                        <option value="healthcare">Healthcare</option>
+                        <option value="ecommerce">E-Commerce</option>
+                        <option value="education">Education</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Team Size *</label>
+                    <select class="form-input" name="founder_team_size" required>
+                        <option value="">Select team size...</option>
+                        <option value="1">1 (Just me)</option>
+                        <option value="2-5">2-5</option>
+                        <option value="5-10">5-10</option>
+                        <option value="10+">10+</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Funding Raised *</label>
+                    <select class="form-input" name="founder_funding" required>
+                        <option value="">Select funding...</option>
+                        <option value="none">No funding yet</option>
+                        <option value="0-100k">< $100k</option>
+                        <option value="100k-1m">$100k - $1M</option>
+                        <option value="1m+">$1M+</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Website/LinkedIn (Optional)</label>
+                    <input type="url" class="form-input" name="founder_website" placeholder="https://linkedin.com/in/yourprofile">
+                </div>
+                <div class="form-checkbox">
+                    <input type="checkbox" id="founderTerms" name="founder_terms" required>
+                    <label for="founderTerms">I agree to the <a href="#" target="_blank">Terms & Conditions</a></label>
+                </div>
+                <div class="error-message" id="founderError"></div>
+                <button type="submit" class="submit-button" disabled>Register</button>
+                <div class="success-message hidden" id="founderSuccess">✅ Registration successful! We'll contact you soon.</div>
+            </form>
+            <button class="back-button" onclick="backToRoles()">← Back</button>
+        </div>
+
+        <!-- BUILDER FORM -->
+        <div class="modal-view hidden" id="builderView">
+            <h2 class="modal-title">Builder Registration</h2>
+            <p class="modal-subtitle">Showcase your expertise</p>
+            
+            <form id="builderForm" class="register-form">
+                <div class="form-group">
+                    <label class="form-label">Full Name *</label>
+                    <input type="text" class="form-input" name="builder_name" placeholder="Your name" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email Address *</label>
+                    <input type="email" class="form-input" name="builder_email" placeholder="name@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Phone Number *</label>
+                    <input type="tel" class="form-input" name="builder_phone" placeholder="+91 XXXXX XXXXX" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Institution Name *</label>
+                    <input type="text" class="form-input" name="builder_institution" placeholder="Company or University name" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Primary Expertise *</label>
+                    <input type="text" class="form-input" name="builder_expertise" placeholder="e.g., Full-stack Developer, DevOps Engineer" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Years of Experience *</label>
+                    <select class="form-input" name="builder_experience" required>
+                        <option value="">Select experience...</option>
+                        <option value="0-1">0-1 years</option>
+                        <option value="1-3">1-3 years</option>
+                        <option value="3-5">3-5 years</option>
+                        <option value="5+">5+ years</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Tech Stack *</label>
+                    <input type="text" class="form-input" name="builder_tech_stack" placeholder="e.g., React, Node.js, Python, Docker" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">GitHub/Portfolio *</label>
+                    <input type="url" class="form-input" name="builder_portfolio" placeholder="https://github.com/yourprofile" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Work Preference *</label>
+                    <select class="form-input" name="builder_work_pref" required>
+                        <option value="">Select preference...</option>
+                        <option value="freelance">Freelance</option>
+                        <option value="full-time">Full-time</option>
+                        <option value="both">Both</option>
+                    </select>
+                </div>
+                <div class="form-checkbox">
+                    <input type="checkbox" id="builderTerms" name="builder_terms" required>
+                    <label for="builderTerms">I agree to the <a href="#" target="_blank">Terms & Conditions</a></label>
+                </div>
+                <div class="error-message" id="builderError"></div>
+                <button type="submit" class="submit-button" disabled>Register</button>
+                <div class="success-message hidden" id="builderSuccess">✅ Registration successful! We'll contact you soon.</div>
+            </form>
+            <button class="back-button" onclick="backToRoles()">← Back</button>
+        </div>
+
+        <!-- INVESTOR FORM -->
+        <div class="modal-view hidden" id="investorView">
+            <h2 class="modal-title">Investor Registration</h2>
+            <p class="modal-subtitle">Connect with innovative founders</p>
+            
+            <form id="investorForm" class="register-form">
+                <div class="form-group">
+                    <label class="form-label">Full Name *</label>
+                    <input type="text" class="form-input" name="investor_name" placeholder="Your name" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email Address *</label>
+                    <input type="email" class="form-input" name="investor_email" placeholder="name@investment.com" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Phone Number *</label>
+                    <input type="tel" class="form-input" name="investor_phone" placeholder="+91 XXXXX XXXXX" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Company/Fund Name *</label>
+                    <input type="text" class="form-input" name="investor_company" placeholder="Your fund or company name" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Investment Stage *</label>
+                    <select class="form-input" name="investor_stage" required>
+                        <option value="">Select stage...</option>
+                        <option value="seed">Seed</option>
+                        <option value="seriesA">Series A</option>
+                        <option value="seriesB">Series B</option>
+                        <option value="seriesBplus">Series B+</option>
+                        <option value="growth">Growth</option>
+                        <option value="corporate">Corporate</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Investment Focus *</label>
+                    <input type="text" class="form-input" name="investor_focus" placeholder="e.g., AI, SaaS, B2B, FinTech" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">AUM (Optional)</label>
+                    <input type="text" class="form-input" name="investor_aum" placeholder="Assets Under Management (optional)">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Ticket Size *</label>
+                    <select class="form-input" name="investor_ticket_size" required>
+                        <option value="">Select range...</option>
+                        <option value="50k-250k">$50k - $250k</option>
+                        <option value="250k-1m">$250k - $1M</option>
+                        <option value="1m-5m">$1M - $5M</option>
+                        <option value="5m+">$5M+</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Geographic Focus *</label>
+                    <select class="form-input" name="investor_geo" required>
+                        <option value="">Select region...</option>
+                        <option value="india">India</option>
+                        <option value="north-america">North America</option>
+                        <option value="europe">Europe</option>
+                        <option value="asia">Asia</option>
+                        <option value="global">Global</option>
+                    </select>
+                </div>
+                <div class="form-checkbox">
+                    <input type="checkbox" id="investorTerms" name="investor_terms" required>
+                    <label for="investorTerms">I agree to the <a href="#" target="_blank">Terms & Conditions</a></label>
+                </div>
+                <div class="error-message" id="investorError"></div>
+                <button type="submit" class="submit-button" disabled>Register</button>
+                <div class="success-message hidden" id="investorSuccess">✅ Registration successful! We'll contact you soon.</div>
+            </form>
+            <button class="back-button" onclick="backToRoles()">← Back</button>
+        </div>
+    </div>
+</div>
+
+
+    <script>
+// EMAILJS INIT
+emailjs.init("BJ-P1jsUxcvrx6nXG");
+
+// PROGRESS DOTS ANIMATION
+setTimeout(() => {
+    const dots = document.querySelectorAll('.dot');
+    let dotIndex = 0;
+    setInterval(() => {
+        dots.forEach(dot => dot.classList.remove('active'));
+        dots[dotIndex].classList.add('active');
+        dotIndex = (dotIndex + 1) % dots.length;
+    }, 800);
+}, 1500);
+
+// EMAIL VALIDATION REGEX
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const disposableDomains = ['tempmail.com', '10minutemail.com', 'mailinator.com', 'throwaway.email', 'guerrillamail.com'];
+
+// ROLE SELECTION
+function selectRole(role) {
+    document.getElementById('roleView').classList.add('hidden');
+    document.getElementById(role + 'View').classList.remove('hidden');
+}
+
+// BACK TO ROLES
+function backToRoles() {
+    document.querySelectorAll('.modal-view').forEach(view => {
+        view.classList.add('hidden');
+    });
+    document.getElementById('roleView').classList.remove('hidden');
+}
+
+// CHECKBOX ENABLE/DISABLE SUBMIT BUTTON
+document.addEventListener('change', function(e) {
+    if (e.target.type === 'checkbox' && e.target.name.includes('terms')) {
+        const form = e.target.closest('form');
+        const submitBtn = form.querySelector('.submit-button');
+        submitBtn.disabled = !e.target.checked;
+    }
+});
+
+// ============================================
+// FOUNDER FORM SUBMISSION
+// ============================================
+document.getElementById('founderForm')?.addEventListener('submit', function(event) {
+    event.preventDefault();
+    
+    const name = document.querySelector('[name="founder_name"]').value.trim();
+    const email = document.querySelector('[name="founder_email"]').value.trim();
+    const phone = document.querySelector('[name="founder_phone"]').value.trim();
+    const company = document.querySelector('[name="founder_company"]').value.trim();
+    const stage = document.querySelector('[name="founder_stage"]').value;
+    const industry = document.querySelector('[name="founder_industry"]').value;
+    const teamSize = document.querySelector('[name="founder_team_size"]').value;
+    const funding = document.querySelector('[name="founder_funding"]').value;
+    
+    const errorMsg = document.getElementById('founderError');
+    const submitBtn = this.querySelector('.submit-button');
+    const successMsg = document.getElementById('founderSuccess');
+    
+    errorMsg.style.display = 'none';
+    errorMsg.textContent = '';
+    
+    // VALIDATION
+    if (!name || !email || !phone || !company || !stage || !industry || !teamSize || !funding) {
+        errorMsg.textContent = 'Please fill all required fields';
+        errorMsg.style.display = 'block';
+        return;
+    }
+    
+    if (!emailRegex.test(email)) {
+        errorMsg.textContent = 'Invalid email format';
+        errorMsg.style.display = 'block';
+        return;
+    }
+    
+    const domain = email.split('@')[1].toLowerCase();
+    if (disposableDomains.includes(domain)) {
+        errorMsg.textContent = 'Please use a valid business email';
+        errorMsg.style.display = 'block';
+        return;
+    }
+    
+    // SUBMIT TO EMAILJS
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Registering...';
+    
+    emailjs.send('service_59oqsg8', 'template_bzceg36', {
+        from_name: name,
+        from_email: email,
+        phone: phone,
+        company: company,
+        stage: stage,
+        industry: industry,
+        team_size: teamSize,
+        funding: funding,
+        role: 'Founder',
+        timestamp: new Date().toLocaleString()
+    }).then(function(response) {
+        console.log('✅ Founder Registration SUCCESS', response.status);
+        submitBtn.style.display = 'none';
+        successMsg.classList.remove('hidden');
+        
+        setTimeout(() => {
+            closeModal();
+        }, 2500);
+        
+    }, function(error) {
+        console.error('❌ ERROR', error);
+        errorMsg.textContent = 'Registration failed. Please try again.';
+        errorMsg.style.display = 'block';
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Register';
+    });
+});
+
+// ============================================
+// BUILDER FORM SUBMISSION
+// ============================================
+document.getElementById('builderForm')?.addEventListener('submit', function(event) {
+    event.preventDefault();
+    
+    const name = document.querySelector('[name="builder_name"]').value.trim();
+    const email = document.querySelector('[name="builder_email"]').value.trim();
+    const phone = document.querySelector('[name="builder_phone"]').value.trim();
+    const institution = document.querySelector('[name="builder_institution"]').value.trim();
+    const expertise = document.querySelector('[name="builder_expertise"]').value.trim();
+    const experience = document.querySelector('[name="builder_experience"]').value;
+    const techStack = document.querySelector('[name="builder_tech_stack"]').value.trim();
+    const portfolio = document.querySelector('[name="builder_portfolio"]').value.trim();
+    const workPref = document.querySelector('[name="builder_work_pref"]').value;
+    
+    const errorMsg = document.getElementById('builderError');
+    const submitBtn = this.querySelector('.submit-button');
+    const successMsg = document.getElementById('builderSuccess');
+    
+    errorMsg.style.display = 'none';
+    errorMsg.textContent = '';
+    
+    // VALIDATION
+    if (!name || !email || !phone || !institution || !expertise || !experience || !techStack || !portfolio || !workPref) {
+        errorMsg.textContent = 'Please fill all required fields';
+        errorMsg.style.display = 'block';
+        return;
+    }
+    
+    if (!emailRegex.test(email)) {
+        errorMsg.textContent = 'Invalid email format';
+        errorMsg.style.display = 'block';
+        return;
+    }
+    
+    if (!portfolio.startsWith('http')) {
+        errorMsg.textContent = 'Portfolio URL must start with http/https';
+        errorMsg.style.display = 'block';
+        return;
+    }
+    
+    const domain = email.split('@')[1].toLowerCase();
+    if (disposableDomains.includes(domain)) {
+        errorMsg.textContent = 'Please use a valid business email';
+        errorMsg.style.display = 'block';
+        return;
+    }
+    
+    // SUBMIT TO EMAILJS
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Registering...';
+    
+    emailjs.send('service_59oqsg8', 'template_bzceg36', {
+        from_name: name,
+        from_email: email,
+        phone: phone,
+        institution: institution,
+        expertise: expertise,
+        experience: experience,
+        tech_stack: techStack,
+        portfolio: portfolio,
+        work_preference: workPref,
+        role: 'Builder',
+        timestamp: new Date().toLocaleString()
+    }).then(function(response) {
+        console.log('✅ Builder Registration SUCCESS', response.status);
+        submitBtn.style.display = 'none';
+        successMsg.classList.remove('hidden');
+        
+        setTimeout(() => {
+            closeModal();
+        }, 2500);
+        
+    }, function(error) {
+        console.error('❌ ERROR', error);
+        errorMsg.textContent = 'Registration failed. Please try again.';
+        errorMsg.style.display = 'block';
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Register';
+    });
+});
+
+// ============================================
+// INVESTOR FORM SUBMISSION
+// ============================================
+document.getElementById('investorForm')?.addEventListener('submit', function(event) {
+    event.preventDefault();
+    
+    const name = document.querySelector('[name="investor_name"]').value.trim();
+    const email = document.querySelector('[name="investor_email"]').value.trim();
+    const phone = document.querySelector('[name="investor_phone"]').value.trim();
+    const company = document.querySelector('[name="investor_company"]').value.trim();
+    const stage = document.querySelector('[name="investor_stage"]').value;
+    const focus = document.querySelector('[name="investor_focus"]').value.trim();
+    const ticketSize = document.querySelector('[name="investor_ticket_size"]').value;
+    const geo = document.querySelector('[name="investor_geo"]').value;
+    const aum = document.querySelector('[name="investor_aum"]').value.trim();
+    
+    const errorMsg = document.getElementById('investorError');
+    const submitBtn = this.querySelector('.submit-button');
+    const successMsg = document.getElementById('investorSuccess');
+    
+    errorMsg.style.display = 'none';
+    errorMsg.textContent = '';
+    
+    // VALIDATION
+    if (!name || !email || !phone || !company || !stage || !focus || !ticketSize || !geo) {
+        errorMsg.textContent = 'Please fill all required fields';
+        errorMsg.style.display = 'block';
+        return;
+    }
+    
+    if (!emailRegex.test(email)) {
+        errorMsg.textContent = 'Invalid email format';
+        errorMsg.style.display = 'block';
+        return;
+    }
+    
+    const domain = email.split('@')[1].toLowerCase();
+    if (disposableDomains.includes(domain)) {
+        errorMsg.textContent = 'Please use a valid business email';
+        errorMsg.style.display = 'block';
+        return;
+    }
+    
+    // SUBMIT TO EMAILJS
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Registering...';
+    
+    emailjs.send('service_59oqsg8', 'template_bzceg36', {
+        from_name: name,
+        from_email: email,
+        phone: phone,
+        company: company,
+        stage: stage,
+        focus: focus,
+        ticket_size: ticketSize,
+        aum: aum || 'Not specified',
+        geographic_focus: geo,
+        role: 'Investor',
+        timestamp: new Date().toLocaleString()
+    }).then(function(response) {
+        console.log('✅ Investor Registration SUCCESS', response.status);
+        submitBtn.style.display = 'none';
+        successMsg.classList.remove('hidden');
+        
+        setTimeout(() => {
+            closeModal();
+        }, 2500);
+        
+    }, function(error) {
+        console.error('❌ ERROR', error);
+        errorMsg.textContent = 'Registration failed. Please try again.';
+        errorMsg.style.display = 'block';
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Register';
+    });
+});
+
+// MODAL FUNCTIONS
+function openModal() {
+    document.getElementById('modal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+    document.getElementById('modal').classList.remove('active');
+    document.body.style.overflow = '';
+    backToRoles();
+    
+    // RESET ALL FORMS
+    document.querySelectorAll('.register-form').forEach(form => {
+        form.reset();
+        form.querySelector('.submit-button').disabled = true;
+        form.querySelector('.submit-button').style.display = 'block';
+        form.querySelector('.submit-button').textContent = 'Register';
+        form.querySelector('.success-message').classList.add('hidden');
+        form.querySelector('.error-message').style.display = 'none';
+    });
+}
+
+// MODAL BACKDROP CLICK
+document.getElementById('modal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+});
+
+// ESCAPE KEY
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeModal();
+});
+
+document.querySelectorAll('.form-checkbox input[type="checkbox"]').forEach(checkbox => {
+    checkbox.addEventListener('change', function() {
+        const submitBtn = this.closest('form').querySelector('.submit-button');
+        submitBtn.disabled = !this.checked;
+    });
+});
+
+    </script>
+</body>
+</html>

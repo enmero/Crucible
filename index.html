@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crucible Loading Screen - Perfect Alignment</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@600&display=swap');
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            background-color: #ffffff;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .loading-screen {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            width: 100vw;
+            padding: clamp(20px, 5vw, 40px);
+        }
+
+        .logo-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: clamp(16px, 3vw, 32px);
+            max-width: min(90vw, 600px);
+            width: 100%;
+        }
+
+        .icon-container {
+            width: clamp(64px, 12vw, 96px);
+            height: clamp(64px, 12vw, 96px);
+            flex-shrink: 0;
+            animation: iconPop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        .logo-icon {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        /* Layer Animations */
+        .layer {
+            transform-origin: center bottom;
+            animation: layerRise 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        .bg-teal { 
+            animation-delay: 0.1s; 
+            opacity: 0; 
+            animation: fadeIn 0.5s forwards; 
+        }
+        .hill-1 { 
+            transform: translateY(100px); 
+            animation-delay: 0.3s; 
+        }
+        .hill-2 { 
+            transform: translateY(100px); 
+            animation-delay: 0.5s; 
+        }
+        .hill-3 { 
+            transform: translateY(100px); 
+            animation-delay: 0.7s; 
+        }
+
+        .logo-text {
+            font-size: clamp(40px, 7vw, 68px);
+            font-weight: 600;
+            color: #444444;
+            margin: 0;
+            opacity: 0;
+            transform: translateX(-30px);
+            animation: textReveal 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            animation-delay: 1.2s;
+            line-height: 1.05;
+            white-space: nowrap;
+        }
+
+        /* Desktop & Tablet */
+        @media (min-width: 768px) {
+            .logo-wrapper {
+                gap: 32px;
+            }
+            
+            .icon-container {
+                width: 96px;
+                height: 96px;
+            }
+            
+            .logo-text {
+                font-size: 68px;
+            }
+        }
+
+        /* Mobile Portrait */
+        @media (max-width: 767px) {
+            .loading-screen {
+                padding: clamp(24px, 8vw, 48px);
+            }
+            
+            .logo-wrapper {
+                flex-direction: column;
+                gap: clamp(20px, 6vw, 32px);
+                text-align: center;
+            }
+            
+            .logo-text {
+                transform: scale(0.95);
+                animation: textRevealMobile 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            }
+        }
+
+        /* Small Mobile */
+        @media (max-width: 480px) {
+            .icon-container {
+                width: clamp(56px, 16vw, 72px);
+                height: clamp(56px, 16vw, 72px);
+            }
+            
+            .logo-text {
+                font-size: clamp(32px, 9vw, 48px);
+            }
+        }
+
+        /* Landscape Mobile */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .loading-screen {
+                padding: 20px;
+            }
+            
+            .logo-wrapper {
+                gap: 24px;
+            }
+            
+            .icon-container {
+                width: 72px;
+                height: 72px;
+            }
+            
+            .logo-text {
+                font-size: clamp(36px, 6vw, 52px);
+            }
+        }
+
+        @keyframes iconPop {
+            0% { 
+                transform: scale(0) rotate(-10deg); 
+                opacity: 0; 
+            }
+            100% { 
+                transform: scale(1) rotate(0deg); 
+                opacity: 1; 
+            }
+        }
+
+        @keyframes layerRise {
+            from { transform: translateY(100px); }
+            to { transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        @keyframes textReveal {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes textRevealMobile {
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Subtle pulse */
+        .logo-wrapper {
+            animation: gentlePulse 3s ease-in-out infinite;
+            animation-delay: 2s;
+        }
+
+        @keyframes gentlePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.015); }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-screen">
+        <div class="logo-wrapper">
+            <div class="icon-container">
+                <svg class="logo-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <clipPath id="triangleClip">
+                            <path d="M 5,15 Q 2,15 3.5,18 L 46.5,92 Q 50,98 53.5,92 L 96.5,18 Q 98,15 95,15 Z" />
+                        </clipPath>
+                    </defs>
+                    
+                    <g clip-path="url(#triangleClip)">
+                        <rect class="layer bg-teal" x="0" y="0" width="100" height="100" fill="#64C4BC" />
+                        <circle class="layer hill-1" cx="30" cy="65" r="45" fill="#F24438" />
+                        <circle class="layer hill-2" cx="70" cy="75" r="45" fill="#FF6B3D" />
+                        <circle class="layer hill-3" cx="50" cy="105" r="50" fill="#FF8A24" />
+                    </g>
+                </svg>
+            </div>
+            <h1 class="logo-text">Crucible</h1>
+        </div>
+    </div>
+</body>
+</html>
