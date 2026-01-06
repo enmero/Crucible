@@ -844,7 +844,7 @@
 
         <!-- REGISTER -->
         <div class="register-wrapper">
-            <p class="register-subtitle">Join the waitlist for exclusive early access</p>
+            <p class="register-subtitle">Pre-register for early access</p>
             <button class="register-button" onclick="openModal()">
                 Get Early Access
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
@@ -872,11 +872,11 @@
             
             <div class="role-buttons">
                 <button class="role-btn" onclick="selectRole('founder')">
-                    <i class="fas fa-users"></i>
+                    <i class="fas fa-rocket"></i>
                     <span class="role-label">Founder</span>
                 </button>
                 <button class="role-btn" onclick="selectRole('builder')">
-                    <i class="fas fa-hammer"></i>
+                    <i class="fas fa-code"></i>
                     <span class="role-label">Builder</span>
                 </button>
                 <button class="role-btn" onclick="selectRole('investor')">
@@ -1006,6 +1006,10 @@
                     <label class="form-label">GitHub/Portfolio</label>
                     <input type="url" class="form-input" name="builder_portfolio" placeholder="https://github.com/yourprofile">
                 </div>
+                 <div class="form-group">
+                    <label class="form-label">Website/LinkedIn</label>
+                    <input type="url" class="form-input" name="founder_website" placeholder="https://linkedin.com/in/yourprofile">
+                </div>
                 <div class="form-checkbox">
                     <input type="checkbox" id="builderTerms" name="builder_terms" required>
                     <label for="builderTerms">I agree to the <a href="terms.html" target="_self">Terms & Conditions</a></label>
@@ -1032,32 +1036,33 @@
                     <input type="email" class="form-input" name="investor_email" placeholder="name@investment.com" required>
                 </div>
                 <div class="form-group">
-                <label class="form-label" for="institution_type">Institution Type *</label>
-                <input
-                list="institution_type_list"
-                id="institution_type"
-                name="institution_type"
-                class="form-input"
-                placeholder="e.g. VC Fund, Angel Network, Corporate VC, Government..."
-                required
-                />
+                    <label class="form-label" for="institution_type">Institution Type *</label>
+                    <!--<input
+                    list="institution_type_list"
+                    id="institution_type"
+                    name="institution_type"
+                    class="form-input"
+                    placeholder="e.g. VC Fund, Angel Network, Corporate VC, Government..."
+                    required
+                    /> -->
 
-                <datalist id="institution_type_list">
-                <option value="VC Fund"></option>
-                <option value="Angel Network / Syndicate"></option>
-                <option value="Corporate VC / Strategic"></option>
-                <option value="Government Fund / Public Sector"></option>
-                <option value="Family Office / HNWI"></option>
-                <option value="Private Equity"></option>
-                <option value="Accelerator / Incubator"></option>
-                <option value="Endowment / Foundation"></option>
-                <option value="Pension Fund"></option>
-                <option value="Bank / NBFC"></option>
-                <option value="Hedge Fund"></option>
-                <option value="Mutual Fund / Asset Manager"></option>
-                <option value="Sovereign Wealth Fund"></option>
-                <option value="Other Institutional"></option>
-                </datalist>
+                    <select class="form-input" name="investor_stage" required>
+                        <option value="">Select type...</option>
+                        <option value="VC Fund">VC Fund</option>
+                        <option value="Angel Network / Syndicate">Angel Network / Syndicate</option>
+                        <option value="Corporate VC / Strategic">Corporate VC / Strategic</option>
+                        <option value="Government Fund / Public Sector">Government Fund / Public Sector</option>
+                        <option value="Family Office / HNWI">Family Office / HNWI</option>
+                        <option value="Private Equity">Private Equity</option>
+                        <option value="Accelerator / Incubator">Accelerator / Incubator</option>
+                        <option value="Endowment / Foundation">Endowment / Foundation</option>
+                        <option value="Pension Fund">Pension Fund</option>
+                        <option value="Bank / NBFC">Bank / NBFC</option>
+                        <option value="Hedge Fund">Hedge Fund</option>
+                        <option value="Mutual Fund / Asset Manager">Mutual Fund / Asset Manager</option>
+                        <option value="Sovereign Wealth Fund">Sovereign Wealth Fund</option>
+                        <option value="Other Institutional">Other Institutional</option>
+                    </select>
                 </div>
 
                 <div class="form-group">
@@ -1093,6 +1098,10 @@
                         <!-- JS populates -->
                     </ul>
                     </div>
+                </div>
+                 <div class="form-group">
+                    <label class="form-label">Website/LinkedIn (Optional)</label>
+                    <input type="url" class="form-input" name="founder_website" placeholder="https://linkedin.com/in/yourprofile">
                 </div>
                 <div class="form-checkbox">
                     <input type="checkbox" id="investorTerms" name="investor_terms" required>
