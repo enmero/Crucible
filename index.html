@@ -6,6 +6,7 @@
     <title>Crucible - Validation Platform</title>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="./crux.png">
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
@@ -453,11 +454,13 @@
         .product-text a{
             color: white;
             font-weight: 600;
-            background-color: #0b0d1a;
             text-decoration: none;
-            padding: 1px 6px;
             border-radius: 4px;
         }
+
+        .product-text img {
+            width: 50px;
+        } 
         .modal-content {
             background-color: white;
             padding: 30px;
@@ -746,6 +749,56 @@
         .modal-view.hidden {
             display: none;
         }
+
+        .combobox-container {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+            }
+
+            .combobox-input {
+            width: 100%;
+            padding: 10px 12px; /* Normal padding, no button space */
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            height: 40px;
+            font-size: 14px;
+            }
+
+            .combobox-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1),
+                        0 0 0 1px #3b82f6;
+            border-color: #3b82f6;
+            }
+
+            /* Same listbox styles as before */
+            .combobox-listbox {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            max-height: 240px;
+            overflow-y: auto;
+            background: white;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+            z-index: 50;
+            margin: 4px 0 0;
+            list-style: none;
+            padding: 0;
+            }
+
+            .combobox-listbox li {
+            padding: 12px 16px;
+            cursor: pointer;
+            }
+
+            .combobox-listbox li:hover {
+            background: #f3f4f6;
+            }
+
     </style>
 </head>
 <body>
@@ -801,7 +854,7 @@
 
             <!-- PRODUCT LINE - HORIZONTAL -->
             <div class="product-line">
-                <p class="product-text">A Product of <a href="https://www.enmero.in">enmero</a></p>
+                <p class="product-text">A Product of <a href="https://www.enmero.in"><img src="./enmero.png" /></a></p>
             </div>
         </div>
     </div>
@@ -893,7 +946,7 @@
                     <select class="form-input" name="founder_funding" required>
                         <option value="">Select funding...</option>
                         <option value="none">No funding yet</option>
-                        <option value="0-100k">< $100k</option>
+                        <option value="0-100k"> $100k</option>
                         <option value="100k-1m">$100k - $1M</option>
                         <option value="1m+">$1M+</option>
                     </select>
@@ -904,7 +957,7 @@
                 </div>
                 <div class="form-checkbox">
                     <input type="checkbox" id="founderTerms" name="founder_terms" required>
-                    <label for="founderTerms">I agree to the <a href="#" target="_blank">Terms & Conditions</a></label>
+                    <label for="founderTerms">I agree to the <a href="terms.html" target="_self">Terms & Conditions</a></label>
                 </div>
                 <div class="error-message" id="founderError"></div>
                 <button type="submit" class="submit-button" disabled>Register</button>
@@ -932,10 +985,6 @@
                     <input type="tel" class="form-input" name="builder_phone" placeholder="+91 XXXXX XXXXX" required>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Institution Name *</label>
-                    <input type="text" class="form-input" name="builder_institution" placeholder="Company or University name" required>
-                </div>
-                <div class="form-group">
                     <label class="form-label">Primary Expertise *</label>
                     <input type="text" class="form-input" name="builder_expertise" placeholder="e.g., Full-stack Developer, DevOps Engineer" required>
                 </div>
@@ -957,18 +1006,9 @@
                     <label class="form-label">GitHub/Portfolio</label>
                     <input type="url" class="form-input" name="builder_portfolio" placeholder="https://github.com/yourprofile">
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Work Preference *</label>
-                    <select class="form-input" name="builder_work_pref" required>
-                        <option value="">Select preference...</option>
-                        <option value="freelance">Freelance</option>
-                        <option value="full-time">Full-time</option>
-                        <option value="both">Both</option>
-                    </select>
-                </div>
                 <div class="form-checkbox">
                     <input type="checkbox" id="builderTerms" name="builder_terms" required>
-                    <label for="builderTerms">I agree to the <a href="#" target="_blank">Terms & Conditions</a></label>
+                    <label for="builderTerms">I agree to the <a href="terms.html" target="_self">Terms & Conditions</a></label>
                 </div>
                 <div class="error-message" id="builderError"></div>
                 <button type="submit" class="submit-button" disabled>Register</button>
@@ -984,25 +1024,47 @@
             
             <form id="investorForm" class="register-form">
                 <div class="form-group">
-                    <label class="form-label">Full Name *</label>
-                    <input type="text" class="form-input" name="investor_name" placeholder="Your name" required>
+                    <label class="form-label">company Name *</label>
+                    <input type="text" class="form-input" name="investor_name" placeholder="Your company name" required>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Email Address *</label>
                     <input type="email" class="form-input" name="investor_email" placeholder="name@investment.com" required>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Phone Number *</label>
-                    <input type="tel" class="form-input" name="investor_phone" placeholder="+91 XXXXX XXXXX" required>
+                <label class="form-label" for="institution_type">Institution Type *</label>
+                <input
+                list="institution_type_list"
+                id="institution_type"
+                name="institution_type"
+                class="form-input"
+                placeholder="e.g. VC Fund, Angel Network, Corporate VC, Government..."
+                required
+                />
+
+                <datalist id="institution_type_list">
+                <option value="VC Fund"></option>
+                <option value="Angel Network / Syndicate"></option>
+                <option value="Corporate VC / Strategic"></option>
+                <option value="Government Fund / Public Sector"></option>
+                <option value="Family Office / HNWI"></option>
+                <option value="Private Equity"></option>
+                <option value="Accelerator / Incubator"></option>
+                <option value="Endowment / Foundation"></option>
+                <option value="Pension Fund"></option>
+                <option value="Bank / NBFC"></option>
+                <option value="Hedge Fund"></option>
+                <option value="Mutual Fund / Asset Manager"></option>
+                <option value="Sovereign Wealth Fund"></option>
+                <option value="Other Institutional"></option>
+                </datalist>
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Company/Fund Name *</label>
-                    <input type="text" class="form-input" name="investor_company" placeholder="Your fund or company name" required>
-                </div>
+
                 <div class="form-group">
                     <label class="form-label">Investment Stage *</label>
                     <select class="form-input" name="investor_stage" required>
                         <option value="">Select stage...</option>
+                        <option value="pre-Seed">pre-Seed</option>
                         <option value="seed">Seed</option>
                         <option value="seriesA">Series A</option>
                         <option value="seriesB">Series B</option>
@@ -1012,37 +1074,29 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Investment Focus *</label>
-                    <input type="text" class="form-input" name="investor_focus" placeholder="e.g., AI, SaaS, B2B, FinTech" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">AUM (Optional)</label>
-                    <input type="text" class="form-input" name="investor_aum" placeholder="Assets Under Management (optional)">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Ticket Size *</label>
-                    <select class="form-input" name="investor_ticket_size" required>
-                        <option value="">Select range...</option>
-                        <option value="50k-250k">$50k - $250k</option>
-                        <option value="250k-1m">$250k - $1M</option>
-                        <option value="1m-5m">$1M - $5M</option>
-                        <option value="5m+">$5M+</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Geographic Focus *</label>
-                    <select class="form-input" name="investor_geo" required>
-                        <option value="">Select region...</option>
-                        <option value="india">India</option>
-                        <option value="north-america">North America</option>
-                        <option value="europe">Europe</option>
-                        <option value="asia">Asia</option>
-                        <option value="global">Global</option>
-                    </select>
+                    <label class="form-label" for="investment_focus_input">Investment Focus *</label>
+                    <div class="combobox-container">
+                    <input
+                        type="text"
+                        id="investment_focus_input"
+                        name="investment_focus"
+                        class="form-input combobox-input"
+                        placeholder="Click or type e.g. AI, SaaS..."
+                        autocomplete="off"
+                        aria-autocomplete="list"
+                        aria-haspopup="listbox"
+                        aria-expanded="false"
+                        required
+                    />
+                    
+                    <ul id="investment_focus_listbox" class="combobox-listbox" role="listbox" hidden>
+                        <!-- JS populates -->
+                    </ul>
+                    </div>
                 </div>
                 <div class="form-checkbox">
                     <input type="checkbox" id="investorTerms" name="investor_terms" required>
-                    <label for="investorTerms">I agree to the <a href="#" target="_blank">Terms & Conditions</a></label>
+                    <label for="investorTerms">I agree to the <a href="terms.html" target="_self">Terms & Conditions</a></label>
                 </div>
                 <div class="error-message" id="investorError"></div>
                 <button type="submit" class="submit-button" disabled>Register</button>
@@ -1053,6 +1107,86 @@
     </div>
 </div>
 
+
+<script>
+// Data from previous list (concise version)
+const input = document.getElementById('investment_focus_input');
+const listbox = document.getElementById('investment_focus_listbox');
+
+const options = [
+  'AI / Machine Learning / Deep Tech',
+  'SaaS / Enterprise Software / B2B Software',
+  "Developer Tools / Infra / DevOps",
+  "FinTech / Financial Services / DeFi",
+  "HealthTech / Digital Health / Biotech / MedTech",
+  "Consumer Tech / B2C / Marketplaces",
+  "E-commerce / D2C / RetailTech",
+  "EdTech",
+  "HRTech / Future of Work / Productivity",
+  "Cybersecurity / Privacy",
+  "ClimateTech / CleanTech / Energy / Sustainability",
+  "Mobility / AutoTech / Smart Mobility / Logistics",
+  "PropTech / Real Estate / ConstructionTech",
+  "AgriTech / FoodTech",
+  "SpaceTech",
+  "Robotics / IoT / Hardware",
+  "Gaming / Media / Entertainment / Creator Economy",
+  "IndustrialTech / Manufacturing / Supply Chain",
+  "Government / Defense / SecurityTech",
+  "Impact / ESG / Social Enterprise",
+  "B2B",
+  "B2C",
+  "B2B2C",
+  "Enterprise focus",
+  "Mid-market focus",
+  "SMB focus",
+  "Marketplaces / Platforms / Networks",
+  "Subscription / SaaS / Usage-based",
+  "Fin/transaction-driven",
+];
+function populateListbox(filter = '') {
+  listbox.innerHTML = '';
+  const filtered = options.filter(opt => 
+    opt.toLowerCase().includes(filter.toLowerCase())
+  );
+  filtered.forEach((opt, index) => {
+    const li = document.createElement('li');
+    li.role = 'option';
+    li.tabIndex = -1;
+    li.textContent = opt;
+    li.addEventListener('click', () => {
+      input.value = opt;
+      toggleListbox(false);
+    });
+    listbox.appendChild(li);
+  });
+}
+
+function toggleListbox(open) {
+  const isOpen = open !== false;
+  input.setAttribute('aria-expanded', isOpen);
+  listbox.hidden = !isOpen;
+  if (isOpen) {
+    populateListbox(input.value);
+  }
+}
+
+// Open on click/focus
+input.addEventListener('focus', () => toggleListbox(true));
+input.addEventListener('click', () => toggleListbox(true));
+
+// Filter on type
+input.addEventListener('input', () => {
+  toggleListbox(true);
+});
+
+// Close on outside click
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.combobox-container')) {
+    toggleListbox(false);
+  }
+});
+</script>
 
     <script>
 // EMAILJS INIT
@@ -1262,13 +1396,9 @@ document.getElementById('investorForm')?.addEventListener('submit', function(eve
     
     const name = document.querySelector('[name="investor_name"]').value.trim();
     const email = document.querySelector('[name="investor_email"]').value.trim();
-    const phone = document.querySelector('[name="investor_phone"]').value.trim();
-    const company = document.querySelector('[name="investor_company"]').value.trim();
+    const company = document.querySelector('[name="institution_type"]').value.trim();
     const stage = document.querySelector('[name="investor_stage"]').value;
     const focus = document.querySelector('[name="investor_focus"]').value.trim();
-    const ticketSize = document.querySelector('[name="investor_ticket_size"]').value;
-    const geo = document.querySelector('[name="investor_geo"]').value;
-    const aum = document.querySelector('[name="investor_aum"]').value.trim();
     
     const errorMsg = document.getElementById('investorError');
     const submitBtn = this.querySelector('.submit-button');
