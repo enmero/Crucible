@@ -944,11 +944,12 @@
                 <div class="form-group">
                     <label class="form-label">Funding Raised *</label>
                     <select class="form-input" name="founder_funding" required>
-                        <option value="">Select funding...</option>
-                        <option value="none">No funding yet</option>
-                        <option value="0-100k"> $100k</option>
-                        <option value="100k-1m">$100k - $1M</option>
-                        <option value="1m+">$1M+</option>
+                        <option value="">Select stage...</option>
+                        <option value="pre-Seed">pre-Seed</option>
+                        <option value="seed">Seed</option>
+                        <option value="seriesA">Series A</option>
+                        <option value="seriesB">Series B</option>
+                        <option value="seriesBplus">Series B+</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -1117,398 +1118,362 @@
 </div>
 
 
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
-// Data from previous list (concise version)
-const input = document.getElementById('investment_focus_input');
-const listbox = document.getElementById('investment_focus_listbox');
+// EMAILJS INIT - YOUR GMAIL IDs
+emailjs.init("Qni3gA_XCToCCwCHi");  // Your Public Key
 
+// COMBOBOX DATA
 const options = [
   'AI / Machine Learning / Deep Tech',
   'SaaS / Enterprise Software / B2B Software',
-  "Developer Tools / Infra / DevOps",
-  "FinTech / Financial Services / DeFi",
-  "HealthTech / Digital Health / Biotech / MedTech",
-  "Consumer Tech / B2C / Marketplaces",
-  "E-commerce / D2C / RetailTech",
-  "EdTech",
-  "HRTech / Future of Work / Productivity",
-  "Cybersecurity / Privacy",
-  "ClimateTech / CleanTech / Energy / Sustainability",
-  "Mobility / AutoTech / Smart Mobility / Logistics",
-  "PropTech / Real Estate / ConstructionTech",
-  "AgriTech / FoodTech",
-  "SpaceTech",
-  "Robotics / IoT / Hardware",
-  "Gaming / Media / Entertainment / Creator Economy",
-  "IndustrialTech / Manufacturing / Supply Chain",
-  "Government / Defense / SecurityTech",
-  "Impact / ESG / Social Enterprise",
-  "B2B",
-  "B2C",
-  "B2B2C",
-  "Enterprise focus",
-  "Mid-market focus",
-  "SMB focus",
-  "Marketplaces / Platforms / Networks",
-  "Subscription / SaaS / Usage-based",
-  "Fin/transaction-driven",
+  'Developer Tools / Infra / DevOps',
+  'FinTech / Financial Services / DeFi',
+  'HealthTech / Digital Health / Biotech / MedTech',
+  'Consumer Tech / B2C / Marketplaces',
+  'E-commerce / D2C / RetailTech',
+  'EdTech',
+  'HRTech / Future of Work / Productivity',
+  'Cybersecurity / Privacy',
+  'ClimateTech / CleanTech / Energy / Sustainability',
+  'Mobility / AutoTech / Smart Mobility / Logistics',
+  'PropTech / Real Estate / ConstructionTech',
+  'AgriTech / FoodTech',
+  'SpaceTech',
+  'Robotics / IoT / Hardware',
+  'Gaming / Media / Entertainment / Creator Economy',
+  'IndustrialTech / Manufacturing / Supply Chain',
+  'Government / Defense / SecurityTech',
+  'Impact / ESG / Social Enterprise',
+  'B2B', 'B2C', 'B2B2C',
+  'Enterprise focus', 'Mid-market focus', 'SMB focus',
+  'Marketplaces / Platforms / Networks',
+  'Subscription / SaaS / Usage-based',
+  'Fin/transaction-driven'
 ];
-function populateListbox(filter = '') {
-  listbox.innerHTML = '';
-  const filtered = options.filter(opt => 
-    opt.toLowerCase().includes(filter.toLowerCase())
-  );
-  filtered.forEach((opt, index) => {
-    const li = document.createElement('li');
-    li.role = 'option';
-    li.tabIndex = -1;
-    li.textContent = opt;
-    li.addEventListener('click', () => {
-      input.value = opt;
-      toggleListbox(false);
+
+// COMBOBOX SETUP - SAFE CHECK
+const input = document.getElementById('investment_focus_input');
+const listbox = document.getElementById('investment_focus_listbox');
+
+if (input && listbox) {
+  function populateListbox(filter = '') {
+    listbox.innerHTML = '';
+    const filtered = options.filter(opt => 
+      opt.toLowerCase().includes(filter.toLowerCase())
+    );
+    filtered.forEach((opt) => {
+      const li = document.createElement('li');
+      li.role = 'option';
+      li.tabIndex = -1;
+      li.textContent = opt;
+      li.addEventListener('click', () => {
+        input.value = opt;
+        toggleListbox(false);
+      });
+      listbox.appendChild(li);
     });
-    listbox.appendChild(li);
+  }
+
+  function toggleListbox(open) {
+    const isOpen = open !== false;
+    input.setAttribute('aria-expanded', isOpen);
+    listbox.hidden = !isOpen;
+    if (isOpen) {
+      populateListbox(input.value);
+    }
+  }
+
+  input.addEventListener('focus', () => toggleListbox(true));
+  input.addEventListener('click', () => toggleListbox(true));
+  input.addEventListener('input', () => toggleListbox(true));
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.combobox-container')) {
+      toggleListbox(false);
+    }
   });
 }
 
-function toggleListbox(open) {
-  const isOpen = open !== false;
-  input.setAttribute('aria-expanded', isOpen);
-  listbox.hidden = !isOpen;
-  if (isOpen) {
-    populateListbox(input.value);
-  }
-}
-
-// Open on click/focus
-input.addEventListener('focus', () => toggleListbox(true));
-input.addEventListener('click', () => toggleListbox(true));
-
-// Filter on type
-input.addEventListener('input', () => {
-  toggleListbox(true);
-});
-
-// Close on outside click
-document.addEventListener('click', (e) => {
-  if (!e.target.closest('.combobox-container')) {
-    toggleListbox(false);
-  }
-});
-</script>
-
-    <script>
-// EMAILJS INIT
-emailjs.init("BJ-P1jsUxcvrx6nXG");
-
 // PROGRESS DOTS ANIMATION
 setTimeout(() => {
-    const dots = document.querySelectorAll('.dot');
-    let dotIndex = 0;
-    setInterval(() => {
-        dots.forEach(dot => dot.classList.remove('active'));
-        dots[dotIndex].classList.add('active');
-        dotIndex = (dotIndex + 1) % dots.length;
-    }, 800);
+  const dots = document.querySelectorAll('.dot');
+  let dotIndex = 0;
+  setInterval(() => {
+    dots.forEach(dot => dot.classList.remove('active'));
+    dots[dotIndex].classList.add('active');
+    dotIndex = (dotIndex + 1) % dots.length;
+  }, 800);
 }, 1500);
 
-// EMAIL VALIDATION REGEX
+// EMAIL VALIDATION
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const disposableDomains = ['tempmail.com', '10minutemail.com', 'mailinator.com', 'throwaway.email', 'guerrillamail.com'];
 
 // ROLE SELECTION
 function selectRole(role) {
-    document.getElementById('roleView').classList.add('hidden');
-    document.getElementById(role + 'View').classList.remove('hidden');
+  document.getElementById('roleView').classList.add('hidden');
+  document.getElementById(role + 'View').classList.remove('hidden');
 }
 
 // BACK TO ROLES
 function backToRoles() {
-    document.querySelectorAll('.modal-view').forEach(view => {
-        view.classList.add('hidden');
-    });
-    document.getElementById('roleView').classList.remove('hidden');
+  document.querySelectorAll('.modal-view').forEach(view => {
+    view.classList.add('hidden');
+  });
+  document.getElementById('roleView').classList.remove('hidden');
 }
 
-// CHECKBOX ENABLE/DISABLE SUBMIT BUTTON
+// CHECKBOX ENABLE/DISABLE
 document.addEventListener('change', function(e) {
-    if (e.target.type === 'checkbox' && e.target.name.includes('terms')) {
-        const form = e.target.closest('form');
-        const submitBtn = form.querySelector('.submit-button');
-        submitBtn.disabled = !e.target.checked;
-    }
+  if (e.target.type === 'checkbox' && e.target.name.includes('terms')) {
+    const form = e.target.closest('form');
+    const submitBtn = form.querySelector('.submit-button');
+    submitBtn.disabled = !e.target.checked;
+  }
 });
 
 // ============================================
-// FOUNDER FORM SUBMISSION
+// FOUNDER FORM
 // ============================================
 document.getElementById('founderForm')?.addEventListener('submit', function(event) {
-    event.preventDefault();
-    
-    const name = document.querySelector('[name="founder_name"]').value.trim();
-    const email = document.querySelector('[name="founder_email"]').value.trim();
-    const phone = document.querySelector('[name="founder_phone"]').value.trim();
-    const company = document.querySelector('[name="founder_company"]').value.trim();
-    const stage = document.querySelector('[name="founder_stage"]').value;
-    const industry = document.querySelector('[name="founder_industry"]').value;
-    const teamSize = document.querySelector('[name="founder_team_size"]').value;
-    const funding = document.querySelector('[name="founder_funding"]').value;
-    
-    const errorMsg = document.getElementById('founderError');
-    const submitBtn = this.querySelector('.submit-button');
-    const successMsg = document.getElementById('founderSuccess');
-    
-    errorMsg.style.display = 'none';
-    errorMsg.textContent = '';
-    
-    // VALIDATION
-    if (!name || !email || !phone || !company || !stage || !industry || !teamSize || !funding) {
-        errorMsg.textContent = 'Please fill all required fields';
-        errorMsg.style.display = 'block';
-        return;
-    }
-    
-    if (!emailRegex.test(email)) {
-        errorMsg.textContent = 'Invalid email format';
-        errorMsg.style.display = 'block';
-        return;
-    }
-    
-    const domain = email.split('@')[1].toLowerCase();
-    if (disposableDomains.includes(domain)) {
-        errorMsg.textContent = 'Please use a valid business email';
-        errorMsg.style.display = 'block';
-        return;
-    }
-    
-    // SUBMIT TO EMAILJS
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Registering...';
-    
-    emailjs.send('service_59oqsg8', 'template_bzceg36', {
-        from_name: name,
-        from_email: email,
-        phone: phone,
-        company: company,
-        stage: stage,
-        industry: industry,
-        team_size: teamSize,
-        funding: funding,
-        role: 'Founder',
-        timestamp: new Date().toLocaleString()
-    }).then(function(response) {
-        console.log('✅ Founder Registration SUCCESS', response.status);
-        submitBtn.style.display = 'none';
-        successMsg.classList.remove('hidden');
-        
-        setTimeout(() => {
-            closeModal();
-        }, 2500);
-        
-    }, function(error) {
-        console.error('❌ ERROR', error);
-        errorMsg.textContent = 'Registration failed. Please try again.';
-        errorMsg.style.display = 'block';
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Register';
-    });
+  event.preventDefault();
+  
+  const name = document.querySelector('[name="founder_name"]').value.trim();
+  const email = document.querySelector('[name="founder_email"]').value.trim();
+  const phone = document.querySelector('[name="founder_phone"]').value.trim();
+  const company = document.querySelector('[name="founder_company"]').value.trim();
+  const stage = document.querySelector('[name="founder_stage"]').value;
+  const industry = document.querySelector('[name="founder_industry"]').value;
+  const teamSize = document.querySelector('[name="founder_team_size"]').value;
+  const funding = document.querySelector('[name="founder_funding"]').value;
+  
+  const errorMsg = document.getElementById('founderError');
+  const submitBtn = this.querySelector('.submit-button');
+  const successMsg = document.getElementById('founderSuccess');
+  
+  errorMsg.style.display = 'none';
+  
+  // VALIDATION
+  if (!name || !email || !phone || !company || !stage || !industry || !teamSize || !funding) {
+    errorMsg.textContent = 'Please fill all required fields';
+    errorMsg.style.display = 'block';
+    return;
+  }
+  
+  if (!emailRegex.test(email)) {
+    errorMsg.textContent = 'Invalid email format';
+    errorMsg.style.display = 'block';
+    return;
+  }
+  
+  const domain = email.split('@')[1].toLowerCase();
+  if (disposableDomains.includes(domain)) {
+    errorMsg.textContent = 'Please use a valid business email';
+    errorMsg.style.display = 'block';
+    return;
+  }
+  
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Registering...';
+  
+  emailjs.send('service_c2v4ohq', 'template_ovqyu2j', {
+    from_name: name,
+    from_email: email,
+    phone: phone,
+    company: company,
+    stage: stage,
+    industry: industry,
+    team_size: teamSize,
+    funding: funding,
+    role: 'Founder',
+    timestamp: new Date().toLocaleString()
+  }).then(function(response) {
+    console.log('✅ Founder SUCCESS', response.status);
+    submitBtn.style.display = 'none';
+    successMsg.classList.remove('hidden');
+    setTimeout(closeModal, 2500);
+  }, function(error) {
+    console.error('❌ ERROR', error);
+    errorMsg.textContent = 'Registration failed. Please try again.';
+    errorMsg.style.display = 'block';
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Register';
+  });
 });
 
 // ============================================
-// BUILDER FORM SUBMISSION
+// BUILDER FORM
 // ============================================
 document.getElementById('builderForm')?.addEventListener('submit', function(event) {
-    event.preventDefault();
-    
-    const name = document.querySelector('[name="builder_name"]').value.trim();
-    const email = document.querySelector('[name="builder_email"]').value.trim();
-    const phone = document.querySelector('[name="builder_phone"]').value.trim();
-    const institution = document.querySelector('[name="builder_institution"]').value.trim();
-    const expertise = document.querySelector('[name="builder_expertise"]').value.trim();
-    const experience = document.querySelector('[name="builder_experience"]').value;
-    const techStack = document.querySelector('[name="builder_tech_stack"]').value.trim();
-    const portfolio = document.querySelector('[name="builder_portfolio"]').value.trim();
-    const workPref = document.querySelector('[name="builder_work_pref"]').value;
-    
-    const errorMsg = document.getElementById('builderError');
-    const submitBtn = this.querySelector('.submit-button');
-    const successMsg = document.getElementById('builderSuccess');
-    
-    errorMsg.style.display = 'none';
-    errorMsg.textContent = '';
-    
-    // VALIDATION
-    if (!name || !email || !phone || !institution || !expertise || !experience || !techStack || !portfolio || !workPref) {
-        errorMsg.textContent = 'Please fill all required fields';
-        errorMsg.style.display = 'block';
-        return;
-    }
-    
-    if (!emailRegex.test(email)) {
-        errorMsg.textContent = 'Invalid email format';
-        errorMsg.style.display = 'block';
-        return;
-    }
-    
-    if (!portfolio.startsWith('http')) {
-        errorMsg.textContent = 'Portfolio URL must start with http/https';
-        errorMsg.style.display = 'block';
-        return;
-    }
-    
-    const domain = email.split('@')[1].toLowerCase();
-    if (disposableDomains.includes(domain)) {
-        errorMsg.textContent = 'Please use a valid business email';
-        errorMsg.style.display = 'block';
-        return;
-    }
-    
-    // SUBMIT TO EMAILJS
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Registering...';
-    
-    emailjs.send('service_59oqsg8', 'template_bzceg36', {
-        from_name: name,
-        from_email: email,
-        phone: phone,
-        institution: institution,
-        expertise: expertise,
-        experience: experience,
-        tech_stack: techStack,
-        portfolio: portfolio,
-        work_preference: workPref,
-        role: 'Builder',
-        timestamp: new Date().toLocaleString()
-    }).then(function(response) {
-        console.log('✅ Builder Registration SUCCESS', response.status);
-        submitBtn.style.display = 'none';
-        successMsg.classList.remove('hidden');
-        
-        setTimeout(() => {
-            closeModal();
-        }, 2500);
-        
-    }, function(error) {
-        console.error('❌ ERROR', error);
-        errorMsg.textContent = 'Registration failed. Please try again.';
-        errorMsg.style.display = 'block';
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Register';
-    });
+  event.preventDefault();
+  
+  const name = document.querySelector('[name="builder_name"]').value.trim();
+  const email = document.querySelector('[name="builder_email"]').value.trim();
+  const phone = document.querySelector('[name="builder_phone"]').value.trim();
+  const expertise = document.querySelector('[name="builder_expertise"]').value.trim();
+  const experience = document.querySelector('[name="builder_experience"]').value;
+  const techStack = document.querySelector('[name="builder_tech_stack"]').value.trim();
+  const portfolio = document.querySelector('[name="builder_portfolio"]').value.trim();
+  
+  const errorMsg = document.getElementById('builderError');
+  const submitBtn = this.querySelector('.submit-button');
+  const successMsg = document.getElementById('builderSuccess');
+  
+  errorMsg.style.display = 'none';
+  
+  // VALIDATION
+  if (!name || !email || !phone || !expertise || !experience || !techStack) {
+    errorMsg.textContent = 'Please fill all required fields';
+    errorMsg.style.display = 'block';
+    return;
+  }
+  
+  if (!emailRegex.test(email)) {
+    errorMsg.textContent = 'Invalid email format';
+    errorMsg.style.display = 'block';
+    return;
+  }
+
+  const domain = email.split('@')[1].toLowerCase();
+  if (disposableDomains.includes(domain)) {
+    errorMsg.textContent = 'Please use a valid business email';
+    errorMsg.style.display = 'block';
+    return;
+  }
+  
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Registering...';
+  
+  emailjs.send('service_c2v4ohq', 'template_ovqyu2j', {
+    from_name: name,
+    from_email: email,
+    phone: phone,
+    expertise: expertise,
+    experience: experience,
+    tech_stack: techStack,
+    portfolio: portfolio,
+    role: 'Builder',
+    timestamp: new Date().toLocaleString()
+  }).then(function(response) {
+    console.log('✅ Builder SUCCESS', response.status);
+    submitBtn.style.display = 'none';
+    successMsg.classList.remove('hidden');
+    setTimeout(closeModal, 2500);
+  }, function(error) {
+    console.error('❌ ERROR', error);
+    errorMsg.textContent = 'Registration failed. Please try again.';
+    errorMsg.style.display = 'block';
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Register';
+  });
 });
 
 // ============================================
-// INVESTOR FORM SUBMISSION
+// INVESTOR FORM
 // ============================================
 document.getElementById('investorForm')?.addEventListener('submit', function(event) {
-    event.preventDefault();
-    
-    const name = document.querySelector('[name="investor_name"]').value.trim();
-    const email = document.querySelector('[name="investor_email"]').value.trim();
-    const company = document.querySelector('[name="institution_type"]').value.trim();
-    const stage = document.querySelector('[name="investor_stage"]').value;
-    const focus = document.querySelector('[name="investor_focus"]').value.trim();
-    
-    const errorMsg = document.getElementById('investorError');
-    const submitBtn = this.querySelector('.submit-button');
-    const successMsg = document.getElementById('investorSuccess');
-    
-    errorMsg.style.display = 'none';
-    errorMsg.textContent = '';
-    
-    // VALIDATION
-    if (!name || !email || !phone || !company || !stage || !focus || !ticketSize || !geo) {
-        errorMsg.textContent = 'Please fill all required fields';
-        errorMsg.style.display = 'block';
-        return;
-    }
-    
-    if (!emailRegex.test(email)) {
-        errorMsg.textContent = 'Invalid email format';
-        errorMsg.style.display = 'block';
-        return;
-    }
-    
-    const domain = email.split('@')[1].toLowerCase();
-    if (disposableDomains.includes(domain)) {
-        errorMsg.textContent = 'Please use a valid business email';
-        errorMsg.style.display = 'block';
-        return;
-    }
-    
-    // SUBMIT TO EMAILJS
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Registering...';
-    
-    emailjs.send('service_59oqsg8', 'template_bzceg36', {
-        from_name: name,
-        from_email: email,
-        phone: phone,
-        company: company,
-        stage: stage,
-        focus: focus,
-        ticket_size: ticketSize,
-        aum: aum || 'Not specified',
-        geographic_focus: geo,
-        role: 'Investor',
-        timestamp: new Date().toLocaleString()
-    }).then(function(response) {
-        console.log('✅ Investor Registration SUCCESS', response.status);
-        submitBtn.style.display = 'none';
-        successMsg.classList.remove('hidden');
-        
-        setTimeout(() => {
-            closeModal();
-        }, 2500);
-        
-    }, function(error) {
-        console.error('❌ ERROR', error);
-        errorMsg.textContent = 'Registration failed. Please try again.';
-        errorMsg.style.display = 'block';
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Register';
-    });
+  event.preventDefault();
+  
+  const name = document.querySelector('[name="investor_name"]').value.trim();
+  const email = document.querySelector('[name="investor_email"]').value.trim();
+  const stage = document.querySelector('[name="investor_stage"]').value;
+  const focus = document.querySelector('[name="investment_focus_input"]')?.value.trim() || "NONE STFU";
+  const ticketSize = document.querySelector('[name="investor_ticket_size"]')?.value || 'Not specified';
+  const aum = document.querySelector('[name="investor_aum"]')?.value || 'Not specified';
+  const geo = document.querySelector('[name="investor_geo"]')?.value || 'Global';
+  
+  const errorMsg = document.getElementById('investorError');
+  const submitBtn = this.querySelector('.submit-button');
+  const successMsg = document.getElementById('investorSuccess');
+  
+  errorMsg.style.display = 'none';
+  
+  // VALIDATION
+  if (!name || !email || !stage || !focus) {
+    errorMsg.textContent = 'Please fill all required fields';
+    errorMsg.style.display = 'block';
+    return;
+  }
+  
+  if (!emailRegex.test(email)) {
+    errorMsg.textContent = 'Invalid email format';
+    errorMsg.style.display = 'block';
+    return;
+  }
+  
+  const domain = email.split('@')[1].toLowerCase();
+  if (disposableDomains.includes(domain)) {
+    errorMsg.textContent = 'Please use a valid business email';
+    errorMsg.style.display = 'block';
+    return;
+  }
+  
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Registering...';
+  
+  emailjs.send('service_c2v4ohq', 'template_ovqyu2j', {
+    from_name: name,
+    from_email: email,
+    stage: stage,
+    focus: focus,
+    ticket_size: ticketSize,
+    aum: aum,
+    geographic_focus: geo,
+    role: 'Investor',
+    timestamp: new Date().toLocaleString()
+  }).then(function(response) {
+    console.log('✅ Investor SUCCESS', response.status);
+    submitBtn.style.display = 'none';
+    successMsg.classList.remove('hidden');
+    setTimeout(closeModal, 2500);
+  }, function(error) {
+    console.error('❌ ERROR', error);
+    errorMsg.textContent = 'Registration failed. Please try again.';
+    errorMsg.style.display = 'block';
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Register';
+  });
 });
 
 // MODAL FUNCTIONS
 function openModal() {
-    document.getElementById('modal').classList.add('active');
-    document.body.style.overflow = 'hidden';
+  document.getElementById('modal').classList.add('active');
+  document.body.style.overflow = 'hidden';
 }
 
 function closeModal() {
-    document.getElementById('modal').classList.remove('active');
-    document.body.style.overflow = '';
-    backToRoles();
-    
-    // RESET ALL FORMS
-    document.querySelectorAll('.register-form').forEach(form => {
-        form.reset();
-        form.querySelector('.submit-button').disabled = true;
-        form.querySelector('.submit-button').style.display = 'block';
-        form.querySelector('.submit-button').textContent = 'Register';
-        form.querySelector('.success-message').classList.add('hidden');
-        form.querySelector('.error-message').style.display = 'none';
-    });
+  document.getElementById('modal').classList.remove('active');
+  document.body.style.overflow = '';
+  backToRoles();
+  
+  document.querySelectorAll('.register-form').forEach(form => {
+    form.reset();
+    form.querySelector('.submit-button').disabled = true;
+    form.querySelector('.submit-button').style.display = 'block';
+    form.querySelector('.submit-button').textContent = 'Register';
+    form.querySelector('.success-message').classList.add('hidden');
+    form.querySelector('.error-message').style.display = 'none';
+  });
 }
 
 // MODAL BACKDROP CLICK
 document.getElementById('modal').addEventListener('click', function(e) {
-    if (e.target === this) closeModal();
+  if (e.target === this) closeModal();
 });
 
 // ESCAPE KEY
 document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') closeModal();
+  if (e.key === 'Escape') closeModal();
 });
 
 document.querySelectorAll('.form-checkbox input[type="checkbox"]').forEach(checkbox => {
-    checkbox.addEventListener('change', function() {
-        const submitBtn = this.closest('form').querySelector('.submit-button');
-        submitBtn.disabled = !this.checked;
-    });
+  checkbox.addEventListener('change', function() {
+    const submitBtn = this.closest('form').querySelector('.submit-button');
+    submitBtn.disabled = !this.checked;
+  });
 });
+</script>
 
-    </script>
+
 </body>
 </html>
